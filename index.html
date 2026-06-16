@@ -132,8 +132,8 @@
 <body>
   <div id="particles"></div>
 
-  <!-- 🎵 АУДИО ПЛЕЕР -->
-  <audio id="bgMusic" loop preload="auto">
+  <!-- 🎵 АУДИО ПЛЕЕР (БЕЗ preload!) -->
+  <audio id="bgMusic" loop>
     <source src="https://raw.githubusercontent.com/daplevat67-coder/7-coder.github.io/main/music.mp3" type="audio/mpeg">
   </audio>
 
@@ -168,30 +168,50 @@
     const btn = document.getElementById('musicToggle');
     const audio = document.getElementById('bgMusic');
     let playing = false;
+    let audioLoaded = false;
 
-    btn.addEventListener('click', () => {
+    // Проверяем, загрузился ли аудиофайл
+    audio.addEventListener('canplaythrough', () => {
+      audioLoaded = true;
+    });
+
+    audio.addEventListener('error', (e) => {
+      console.error('Ошибка загрузки аудио:', e);
+      alert('⚠️ Музыка не загрузилась. Проверь ссылку на файл.');
+    });
+
+    btn.addEventListener('click', async () => {
       if(playing) {
         audio.pause();
         btn.classList.remove('playing');
         btn.querySelector('.music-icon').textContent = '🎵';
       } else {
-        audio.play().catch(e => console.log('Нужен клик для автозапуска'));
-        btn.classList.add('playing');
-        btn.querySelector('.music-icon').textContent = '🎶';
-      }
-      playing = !playing;
+        try {
+          await audio.play();
+          btn.classList.add('playing');
+          btn.querySelector('.music-icon').textContent = '🎶';
+        } catch(err) {
+          console.error('Ошибка воспроизведения:', err);
+          alert('⚠️ Не удалось воспроизвести музыку');
+        }
+      }      playing = !playing;
     });
 
     // Автостарт по первому клику (политика браузеров)
-    document.addEventListener('click', () => {
-      if(!playing && audio.paused) {
-        audio.play().catch(()=>{});
-        btn.classList.add('playing');
-        btn.querySelector('.music-icon').textContent = '🎶';
-        playing = true;
+    document.addEventListener('click', async () => {
+      if(!playing && !audio.paused && audioLoaded) {
+        try {
+          await audio.play();
+          btn.classList.add('playing');
+          btn.querySelector('.music-icon').textContent = '🎶';
+          playing = true;
+        } catch(e) {
+          // Игнорируем ошибки
+        }
       }
     }, {once: true});
 
     document.addEventListener('DOMContentLoaded', createParticles);
   </script>
-</body></html>
+</body>
+</html>
