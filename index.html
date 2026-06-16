@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Когда тебя бросили...</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a12;
+      --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --text: #e0e0ff;
+      --accent: #8a7cfb;
+      --accent-glow: rgba(138, 124, 251, 0.4);
+      --tg: #0088cc;
+      --tg-glow: rgba(0, 136, 204, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.7;
+    }
+
+    /* Анимированный фон с частицами */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float 15s infinite ease-in-out;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Контейнер контента */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    /* Заголовок с эффектом появления */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease forwards 0.3s;
+      text-shadow: 0 0 20px var(--accent-glow);
+      background: linear-gradient(90deg, #fff, var(--accent), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: fadeInUp 1s ease forwards 0.3s, shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Текст с эффектом печатной машинки */
+    .story {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      margin: 1.5rem 0 2.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1s;
+      max-width: 700px;
+      line-height: 1.9;
+    }
+
+    .typewriter {
+      border-right: 2px solid var(--accent);
+      white-space: pre-wrap;
+      overflow: hidden;
+      animation: typing 3.5s steps(40, end) forwards 1.5s, blink 0.7s step-end infinite;
+      width: 0;
+      max-width: 100%;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Кнопка Telegram */
+    .tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--tg), #00a8e8);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      box-shadow: 0 8px 25px var(--tg-glow);      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 2.5s, pulse 2s ease-in-out infinite 3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tg-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .tg-btn:hover::before {
+      left: 100%;
+    }
+
+    .tg-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px var(--tg-glow);
+    }
+
+    .tg-icon {
+      font-size: 1.4rem;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 25px var(--tg-glow); }
+      50% { box-shadow: 0 8px 40px var(--tg-glow), 0 0 0 10px rgba(0,136,204,0.2); }
+    }
+
+    /* Декоративные элементы */
+    .heart {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-size: 1.5rem;
+      opacity: 0.7;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }    }
+
+    .quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      margin: 2rem 0;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 3.5s;
+      color: var(--accent);
+      position: relative;
+      padding: 0 1rem;
+    }
+
+    .quote::before,
+    .quote::after {
+      content: '"';
+      font-size: 2rem;
+      opacity: 0.5;
+      position: absolute;
+      top: -10px;
+    }
+
+    .quote::before { left: -15px; }
+    .quote::after { right: -15px; bottom: -20px; }
+
+    /* Адаптивность */
+    @media (max-width: 600px) {
+      .container { padding: 1.5rem; }
+      .tg-btn { padding: 0.9rem 2rem; font-size: 1rem; }
+    }
+
+    /* Скрытие скроллбара для эстетики */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <!-- Анимированные частицы фона -->
+  <div id="particles"></div>
+
+  <!-- Основной контент -->
+  <div class="container">
+    <h1>Когда тебя бросили...</h1>
+    
+    <div class="story">
+      <span class="typewriter">Иногда кажется, что мир рухнул. Что ты остался один. Что больше никто не поймёт. Но знай: даже в самой тёмной ночи есть звёзды. И ты — одна из них. ✨</span>
+    </div>
+    <p class="quote">Ты не один. Я здесь.</p>
+
+    <a href="https://t.me/linixxqq" class="tg-btn" target="_blank" rel="noopener">
+      <span class="tg-icon">✈️</span>
+      @linixxqq
+    </a>
+  </div>
+
+  <!-- Декоративное сердце -->
+  <div class="heart">💜</div>
+
+  <script>
+    // Генерация частиц
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const count = 30;
+      
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Случайные параметры
+        const size = Math.random() * 4 + 2;
+        const left = Math.random() * 100;
+        const delay = Math.random() * 15;
+        const duration = Math.random() * 10 + 10;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${left}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        
+        container.appendChild(particle);
+      }
+    }
+
+    // Плавное появление при скролле
+    function onScrollReveal() {
+      const elements = document.querySelectorAll('.story, .quote, .tg-btn');
+      elements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 50) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }
+      });
+    }
+
+    // Инициализация    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      window.addEventListener('scroll', onScrollReveal);
+      
+      // Плавный скролл для кнопки
+      document.querySelector('.tg-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const link = e.currentTarget.href;
+        window.open(link, '_blank', 'noopener,noreferrer');
+      });
+    });
+  </script>
+</body>
+</html>
